@@ -1,0 +1,43 @@
+- name: Playbook 1
+  hosts: web
+  gather_facts: true
+  vars:
+    SW:
+      - httpd
+    SRV:
+      - httpd
+    PORTS:
+      - http
+  tasks:
+    - name: Shell Script 
+      shell: echo "Automated Script Started!"
+    
+    - name: Install the latest version of the SW variable
+      dnf:
+          name: "{{ SW }}"
+          state: latest
+    
+  
+    - name: Activate the httpd in SRV variable
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: true
+      loop: "{{ SRV }}"
+
+    - name: Copy the index file to the servers
+      copy:
+        src: /home/student/index.html
+        dest: /var/www/html/
+      ignore_errors: yes
+
+
+    - name: Open the firewall port 80 to allow the traffic
+      firewalld:
+        service: "{{ item }}"
+        state: enabled
+        permanent: true
+        immediate: true
+      loop: "{{ PORTS }}"
+
+

@@ -1,0 +1,14 @@
+[web]
+servera
+serverb
+
+[db]
+serverc
+serverd
+
+[all:children]
+web
+db
+
+[ws]
+workstation
